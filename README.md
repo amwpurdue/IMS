@@ -1,1 +1,13 @@
 # IMS
+## MongoDB Setup
+Run the following to install MongoDB via helm on an existing kubernetes:
+```
+helm install my-release oci://registry-1.docker.io/bitnamicharts/mongodb
+```
+This will install and run a mongodb deployment, you will need to extract the password. If the above call was successful,
+it will show you how to do this and set it to an environment variable. However, I just wanted the text, so I used:
+```
+kubectl get secret --namespace default my-release-mongodb -o jsonpath="{.data.mongodb-root-password}"
+Output: something like supersecretpwd==
+```
+This "supersecretpwd==" should be placed in "iws-secrets.yml"
