@@ -1,2 +1,2 @@
 Flask==2.3.2
-cryptography
+pymongo[srv]~=4.4.1
