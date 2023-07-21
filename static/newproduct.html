@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Add a product:</h1>
+<!--
+Product ID, ProductName, ProductCategory, Price, AvailableQuantity
+-->
+
+<form action="/products" method="post">
+  <label for="name">Product Name:</label><br>
+  <input type="text" id="name" name="name"><br><br>
+
+  <label for="category">Category:</label><br>
+  <input type="text" id="category" name="category"><br><br>
+
+  <label for="price">Price:</label><br>
+  <input type="number" id="price" name="price"><br><br>
+
+  <label for="quantity">Available Quantity:</label><br>
+  <input type="number" id="quantity" name="quantity"><br><br>
+
+  <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>
