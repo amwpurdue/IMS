@@ -3,9 +3,14 @@ from pymongo import MongoClient
 import os
 import uuid
 
+from search_handler import SearchHandler
+
 PRODUCTS_COL = "products"
 
-productsPage = Blueprint("products_page", __name__, url_prefix="/products")
+products_page = Blueprint("products_page", __name__, url_prefix="/products")
+
+search_handler = SearchHandler("search-ims-index")
+
 
 def get_database():
     if ("db_root_password" in os.environ):
@@ -22,29 +27,55 @@ def get_database():
     return client[os.environ["db_name"]]
 
 
-@productsPage.route("/", methods=["GET"])
-def getProducts():
+def get_product_from_db_result(db_result):
+    return {
+        "product_id": db_result.get("product_id"),
+        "name": db_result.get("name"),
+        "category": db_result.get("category"),
+        "price": db_result.get("price"),
+        "quantity": db_result.get("quantity")
+    }
+
+
+@products_page.route("/", methods=["GET"])
+def get_products():
     db = get_database()
 
-    productList = []
+    product_list = []
     for p in db[PRODUCTS_COL].find():
-        productList.append({
-            "product_id": p.get("product_id"),
-            "name": p.get("name"),
-            "category": p.get("category"),
-            "price": p.get("price"),
-            "quantity": p.get("quantity")
-        })
-    return jsonify({"products": productList})
+        product_list.append(get_product_from_db_result(p))
+    return jsonify({"products": product_list})
 
 
-@productsPage.route("/", methods=["POST"])
-def addProduct():
+@products_page.route("/search", methods=["GET"])
+def search_products():
+    keywords = request.args.get("keywords")
+    db = get_database()
+
+    product_list = []
+    for res in search_handler.search_product(keywords):
+        p = db[PRODUCTS_COL].find_one({"product_id": res})
+        if p is not None:
+            product_list.append(get_product_from_db_result(p))
+    return product_list
+
+
+@products_page.route("/", methods=["POST"])
+def add_product():
     content_type = request.headers.get('Content-Type')
     print(content_type)
     if content_type == 'application/json':
         print("got json")
-
+    if check_input("name"):
+        return "Missing name"
+    if check_input("category"):
+        return "Missing category"
+    if check_input("price"):
+        return "Missing price"
+    if check_input("quantity"):
+        return "Missing quantity"
+    if check_input("description"):
+        return "Missing description"
     db = get_database()
 
     product_id = str(uuid.uuid4())
@@ -55,4 +86,10 @@ def addProduct():
         "price": request.form.get("price"),
         "quantity": request.form.get("quantity")
     })
-    return "Successfully added new product"
+
+    search_handler.add_product(product_id, request.form.get("name"), request.form.get("description"))
+    return "Successfully added new product. <br><a href=\"/\">Home.</a>"
+
+
+def check_input(key):
+    return key not in request.form or len(request.form.get(key).strip()) == 0

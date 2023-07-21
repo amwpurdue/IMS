@@ -3,10 +3,10 @@ from jinja2 import Environment, FileSystemLoader
 import socket
 
 import ims_api
-from ims_api import productsPage
+from ims_api import products_page
 
 app = Flask(__name__)
-app.register_blueprint(productsPage)
+app.register_blueprint(products_page)
 
 
 @app.route("/")
