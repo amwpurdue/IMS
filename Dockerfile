@@ -15,4 +15,4 @@ RUN pip install -r requirements.txt --src /usr/local/src
 COPY . .
 
 EXPOSE 5000
-CMD [ "python", "ims-api.py" ]
+CMD [ "python", "ims_main.py" ]
