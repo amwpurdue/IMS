@@ -1,4 +1,5 @@
 # IMS
+For job interview application
 ## MongoDB Setup
 Run the following to install MongoDB via helm on an existing kubernetes:
 ```
@@ -10,4 +11,17 @@ it will show you how to do this and set it to an environment variable. However, 
 kubectl get secret --namespace default my-release-mongodb -o jsonpath="{.data.mongodb-root-password}"
 Output: something like supersecretpwd==
 ```
-This "supersecretpwd==" should be placed in "iws-secrets.yml"
+This "supersecretpwd==" should be placed in "iws-secrets.yml".
+After this, we need to install the secrets into kubernetes: 
+```
+kubectl apply -f ims-secrets.yml
+```
+## Flask Setup
+Build the image to be deployed: 
+```
+Docker build . -t ims-image
+```
+Deploy to kubernetes: 
+```
+kubectl apply -f ims-deployment.yml
+```
