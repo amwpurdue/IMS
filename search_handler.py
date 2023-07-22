@@ -1,6 +1,4 @@
-import uuid
-
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, exceptions
 
 
 class SearchHandler:
@@ -22,7 +20,10 @@ class SearchHandler:
         return created_response == "created"
 
     def get_product(self, product_id):
-        return self.es.get(index=self.INDEX_NAME, id=product_id)
+        try:
+            return self.es.get(index=self.INDEX_NAME, id=product_id)
+        except exceptions.NotFoundError:
+            return None
 
     def search_product(self, search_term):
         self.es.indices.refresh(index=self.INDEX_NAME)

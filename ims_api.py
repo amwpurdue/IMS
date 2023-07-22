@@ -13,7 +13,7 @@ search_handler = SearchHandler("search-ims-index")
 
 
 def get_database():
-    if ("db_root_password" in os.environ):
+    if "db_root_password" in os.environ:
         client = MongoClient(
             host=os.environ["MY_RELEASE_MONGODB_SERVICE_HOST"] + ":" + os.environ["MY_RELEASE_MONGODB_SERVICE_PORT"],
             username="root",
@@ -28,13 +28,18 @@ def get_database():
 
 
 def get_product_from_db_result(db_result):
-    return {
+    id = db_result.get("product_id")
+    s_results = search_handler.get_product(id)
+    full_product = {
         "product_id": db_result.get("product_id"),
         "name": db_result.get("name"),
         "category": db_result.get("category"),
         "price": db_result.get("price"),
         "quantity": db_result.get("quantity")
     }
+    if s_results is not None:
+        full_product |= s_results["_source"]
+    return full_product
 
 
 @products_page.route("/", methods=["GET"])
@@ -45,6 +50,19 @@ def get_products():
     for p in db[PRODUCTS_COL].find():
         product_list.append(get_product_from_db_result(p))
     return jsonify({"products": product_list})
+
+
+@products_page.route("/<product_id>/", methods=["GET"])
+def get_product(product_id):
+    db = get_database()
+
+    p = db[PRODUCTS_COL].find_one({"product_id": product_id})
+    return jsonify(get_product_from_db_result(p))
+
+
+@products_page.route("/<product_id>/", methods=["DELETE"])
+def delete_product(product_id):
+    return "deleted " + product_id
 
 
 @products_page.route("/search", methods=["GET"])
