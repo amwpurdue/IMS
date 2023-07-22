@@ -1,5 +1,7 @@
 from elasticsearch import Elasticsearch, exceptions
 
+INPUT_KEYS = ["name", "description"]
+
 
 class SearchHandler:
     def __init__(self, index_name) -> None:
@@ -9,11 +11,9 @@ class SearchHandler:
             basic_auth=("elastic", "pRKY6somzlp2xyO3FGPq4yga")
         )
 
-    def add_product(self, product_id, product_name, product_description) -> bool:
-        new_product_doc = {
-            "name": product_name,
-            "description": product_description
-        }
+    def add_product(self, product_id, product_dict) -> bool:
+        new_product_doc = dict(map(lambda key: (key, product_dict[key]), INPUT_KEYS))
+
         created_response = self.es.index(index=self.INDEX_NAME, id=product_id, document=new_product_doc)
         print("created_response: ")
         print(created_response)

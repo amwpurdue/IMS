@@ -84,36 +84,35 @@ def search_products():
     return product_list
 
 
+INPUT_NAMES = ["name", "category", "price", "quantity", "description"]
+
+
 @products_page.route("/", methods=["POST"])
 def add_product():
-    content_type = request.headers.get('Content-Type')
-    print(content_type)
-    if content_type == 'application/json':
-        print("got json")
-    if check_input("name"):
-        return "Missing name"
-    if check_input("category"):
-        return "Missing category"
-    if check_input("price"):
-        return "Missing price"
-    if check_input("quantity"):
-        return "Missing quantity"
-    if check_input("description"):
-        return "Missing description"
+    if request.headers.get('Content-Type') == 'application/json':
+        input_dict = request.json
+    else:
+        input_dict = request.form.to_dict()
+
+    product_dict = dict()
+    try:
+        for key in INPUT_NAMES:
+            add_input(key, input_dict, product_dict)
+    except Exception as e:
+        return str(e)
+
     db = get_database()
 
     product_id = str(uuid.uuid4())
-    db[PRODUCTS_COL].insert_one({
-        "product_id": product_id,
-        "name": request.form.get("name"),
-        "category": request.form.get("category"),
-        "price": request.form.get("price"),
-        "quantity": request.form.get("quantity")
-    })
+    product_dict["product_id"] = product_id
+    db[PRODUCTS_COL].insert_one(product_dict)
 
-    search_handler.add_product(product_id, request.form.get("name"), request.form.get("description"))
+    search_handler.add_product(product_id, product_dict)
     return "Successfully added new product. <br><a href=\"/\">Home.</a>"
 
 
-def check_input(key):
-    return key not in request.form or len(request.form.get(key).strip()) == 0
+def add_input(key, input_dict, output_dict):
+    if key not in request.form or len(request.form.get(key).strip()) == 0:
+        raise Exception("Missing " + key)
+
+    output_dict[key] = input_dict[key]
