@@ -2,7 +2,7 @@ from elasticsearch import Elasticsearch, exceptions
 
 
 class SearchHandler:
-    def __init__(self, index_name="test-index") -> None:
+    def __init__(self, index_name) -> None:
         self.INDEX_NAME = index_name
         self.es = Elasticsearch(
             cloud_id="ims:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDUwZTU2ZTdiMTRhZjQxMzQ4MDZhNTkxZGY1MzBkNTI4JGE3OTczNDM4ZjI5MzQ4NGRhMDA2YTAxMTM2Y2ZiYmJm",

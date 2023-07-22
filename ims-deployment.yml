@@ -28,6 +28,8 @@ spec:
                 key: db_root_password
           - name: db_name
             value: ims
+          - name: es_index
+            value: search-ims-prod
 
 ---
 apiVersion: v1

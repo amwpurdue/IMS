@@ -9,7 +9,10 @@ PRODUCTS_COL = "products"
 
 products_page = Blueprint("products_page", __name__, url_prefix="/products")
 
-search_handler = SearchHandler("search-ims-index")
+if "es_index" in os.environ:
+    search_handler = SearchHandler(os.environ["es_index"])
+else:
+    search_handler = SearchHandler("search-ims-test")
 
 
 def get_database():
@@ -28,8 +31,11 @@ def get_database():
 
 
 def get_product_from_db_result(db_result):
-    id = db_result.get("product_id")
-    s_results = search_handler.get_product(id)
+    if db_result is None:
+        return None
+
+    pid = db_result.get("product_id")
+    s_results = search_handler.get_product(pid)
     full_product = {
         "product_id": db_result.get("product_id"),
         "name": db_result.get("name"),
@@ -37,9 +43,9 @@ def get_product_from_db_result(db_result):
         "price": db_result.get("price"),
         "quantity": db_result.get("quantity")
     }
-    if s_results is not None:
-        full_product |= s_results["_source"]
-    return full_product
+    if s_results is None:
+        return full_product
+    return full_product | s_results["_source"]
 
 
 @products_page.route("/", methods=["GET"])
