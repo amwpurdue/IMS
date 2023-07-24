@@ -81,8 +81,8 @@ def get_product(product_id):
 def delete_product(product_id):
     db = get_database()
 
-    db[PRODUCTS_COL].delete_one({"product_id": product_id})
-    search_handler.delete_product(product_id)
+    print(db[PRODUCTS_COL].delete_one({"product_id": product_id}))
+    print(search_handler.delete_product(product_id))
     return jsonify({"success": product_id}), 200
 
 

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 import socket
@@ -35,12 +35,12 @@ def health_check():
 
     health_dict = {
         "computerName": socket.gethostname() + " (" + socket.gethostbyname("localhost") + ")",
-        "goodProducts": in_both,
-        "missingMongo": only_in_search,
-        "missingES": only_in_mongo,
+        "goodProducts": [{"product_id": x} for x in in_both],
+        "missingMongo": [{"product_id": x} for x in only_in_search],
+        "missingES": [{"product_id": x} for x in only_in_mongo],
         "sampleProducts": sample_products
     }
-    print(health_dict)
+
     return template.render(health_dict)
 
 
