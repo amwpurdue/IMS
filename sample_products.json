@@ -1,212 +1,214 @@
-[
-  {
-    "name": "Wireless Headphones",
-    "description": "High-quality wireless headphones for an immersive audio experience.",
-    "category": "Electronics",
-    "quantity": 50,
-    "price": 79.99
-  },
-  {
-    "name": "Travel Backpack",
-    "description": "A versatile and durable backpack designed for travel enthusiasts.",
-    "category": "Travel",
-    "quantity": 30,
-    "price": 49.95
-  },
-  {
-    "name": "Fitness Tracker",
-    "description": "An advanced fitness tracker to monitor your health and activity levels.",
-    "category": "Health",
-    "quantity": 20,
-    "price": 89.50
-  },
-  {
-    "name": "Stylish Sunglasses",
-    "description": "Fashionable sunglasses to protect your eyes and enhance your style.",
-    "category": "Fashion",
-    "quantity": 40,
-    "price": 39.99
-  },
-  {
-    "name": "Smartphone",
-    "description": "A sleek and powerful smartphone with top-notch features.",
-    "category": "Electronics",
-    "quantity": 15,
-    "price": 599.00
-  },
-  {
-    "name": "Travel Neck Pillow",
-    "description": "Ergonomically designed neck pillow for comfortable travel journeys.",
-    "category": "Travel",
-    "quantity": 25,
-    "price": 19.99
-  },
-  {
-    "name": "Yoga Mat",
-    "description": "High-quality yoga mat for a relaxing and rejuvenating yoga practice.",
-    "category": "Health",
-    "quantity": 50,
-    "price": 29.95
-  },
-  {
-    "name": "Designer Handbag",
-    "description": "A luxurious designer handbag to complement your fashion statement.",
-    "category": "Fashion",
-    "quantity": 10,
-    "price": 299.00
-  },
-  {
-    "name": "Smartwatch",
-    "description": "A feature-rich smartwatch to stay connected and track your activities.",
-    "category": "Electronics",
-    "quantity": 35,
-    "price": 199.99
-  },
-  {
-    "name": "Travel Toiletry Kit",
-    "description": "A compact and organized toiletry kit for hassle-free travel.",
-    "category": "Travel",
-    "quantity": 20,
-    "price": 24.50
-  },
-  {
-    "name": "Bluetooth Speaker",
-    "description": "Portable Bluetooth speaker for music lovers on the go.",
-    "category": "Electronics",
-    "quantity": 20,
-    "price": 49.99
-  },
-  {
-    "name": "Travel Luggage Set",
-    "description": "A set of durable and stylish luggage for your travel needs.",
-    "category": "Travel",
-    "quantity": 15,
-    "price": 149.95
-  },
-  {
-    "name": "Digital Thermometer",
-    "description": "Accurate digital thermometer for quick temperature readings.",
-    "category": "Health",
-    "quantity": 30,
-    "price": 9.50
-  },
-  {
-    "name": "Men's Sports Shoes",
-    "description": "Comfortable and supportive sports shoes for active men.",
-    "category": "Fashion",
-    "quantity": 25,
-    "price": 69.99
-  },
-  {
-    "name": "4K Ultra HD TV",
-    "description": "Immersive 4K Ultra HD TV for cinematic viewing experiences.",
-    "category": "Electronics",
-    "quantity": 10,
-    "price": 899.00
-  },
-  {
-    "name": "Travel Adapter",
-    "description": "Universal travel adapter to stay connected during international trips.",
-    "category": "Travel",
-    "quantity": 40,
-    "price": 14.99
-  },
-  {
-    "name": "Blood Pressure Monitor",
-    "description": "Easy-to-use blood pressure monitor for regular health check-ups.",
-    "category": "Health",
-    "quantity": 20,
-    "price": 39.95
-  },
-  {
-    "name": "Women's Fashion Sneakers",
-    "description": "Stylish and versatile sneakers for fashion-forward women.",
-    "category": "Fashion",
-    "quantity": 30,
-    "price": 59.99
-  },
-  {
-    "name": "Wireless Earbuds",
-    "description": "True wireless earbuds with noise-canceling for an enhanced audio experience.",
-    "category": "Electronics",
-    "quantity": 50,
-    "price": 89.99
-  },
-  {
-    "name": "Travel Neck Wallet",
-    "description": "Secure neck wallet to keep your essentials safe while traveling.",
-    "category": "Travel",
-    "quantity": 15,
-    "price": 17.50
-  },
-  {
-    "name": "Wireless Gaming Mouse",
-    "description": "High-performance wireless gaming mouse for precision and accuracy.",
-    "category": "Electronics",
-    "quantity": 25,
-    "price": 69.99
-  },
-  {
-    "name": "Travel Neck Pillow with Hood",
-    "description": "Travel neck pillow with an attached hood for added comfort during naps.",
-    "category": "Travel",
-    "quantity": 20,
-    "price": 34.95
-  },
-  {
-    "name": "Fitness Resistance Bands Set",
-    "description": "A set of resistance bands for versatile workouts and muscle training.",
-    "category": "Health",
-    "quantity": 30,
-    "price": 19.99
-  },
-  {
-    "name": "Women's Classic Watch",
-    "description": "Elegant and timeless classic watch for women's everyday style.",
-    "category": "Fashion",
-    "quantity": 15,
-    "price": 89.50
-  },
-  {
-    "name": "Smart Home Security Camera",
-    "description": "A smart security camera for monitoring your home remotely.",
-    "category": "Electronics",
-    "quantity": 40,
-    "price": 129.00
-  },
-  {
-    "name": "Travel Packing Cubes Set",
-    "description": "Organized packing cubes set to keep your luggage tidy and neat.",
-    "category": "Travel",
-    "quantity": 25,
-    "price": 24.99
-  },
-  {
-    "name": "Digital Blood Glucose Monitor",
-    "description": "Digital blood glucose monitor for easy and regular blood sugar testing.",
-    "category": "Health",
-    "quantity": 35,
-    "price": 49.95
-  },
-  {
-    "name": "Men's Leather Wallet",
-    "description": "A stylish and durable leather wallet with multiple card slots.",
-    "category": "Fashion",
-    "quantity": 30,
-    "price": 39.99
-  },
-  {
-    "name": "Wireless Noise-Canceling Headphones",
-    "description": "Wireless headphones with advanced noise-canceling technology.",
-    "category": "Electronics",
-    "quantity": 10,
-    "price": 159.99
-  },
-  {
-    "name": "Travel Portable Water Purifier",
-    "description": "Portable water purifier for safe drinking water during outdoor adventures.",
-    "category": "Travel",
-    "quantity": 15,
-    "price": 49.50
-  }
-]
+{
+  "products": [
+    {
+      "name": "Wireless Headphones",
+      "description": "High-quality wireless headphones for an immersive audio experience.",
+      "category": "Electronics",
+      "quantity": 50,
+      "price": 79.99
+    },
+    {
+      "name": "Travel Backpack",
+      "description": "A versatile and durable backpack designed for travel enthusiasts.",
+      "category": "Travel",
+      "quantity": 30,
+      "price": 49.95
+    },
+    {
+      "name": "Fitness Tracker",
+      "description": "An advanced fitness tracker to monitor your health and activity levels.",
+      "category": "Health",
+      "quantity": 20,
+      "price": 89.50
+    },
+    {
+      "name": "Stylish Sunglasses",
+      "description": "Fashionable sunglasses to protect your eyes and enhance your style.",
+      "category": "Fashion",
+      "quantity": 40,
+      "price": 39.99
+    },
+    {
+      "name": "Smartphone",
+      "description": "A sleek and powerful smartphone with top-notch features.",
+      "category": "Electronics",
+      "quantity": 15,
+      "price": 599.00
+    },
+    {
+      "name": "Travel Neck Pillow",
+      "description": "Ergonomically designed neck pillow for comfortable travel journeys.",
+      "category": "Travel",
+      "quantity": 25,
+      "price": 19.99
+    },
+    {
+      "name": "Yoga Mat",
+      "description": "High-quality yoga mat for a relaxing and rejuvenating yoga practice.",
+      "category": "Health",
+      "quantity": 50,
+      "price": 29.95
+    },
+    {
+      "name": "Designer Handbag",
+      "description": "A luxurious designer handbag to complement your fashion statement.",
+      "category": "Fashion",
+      "quantity": 10,
+      "price": 299.00
+    },
+    {
+      "name": "Smartwatch",
+      "description": "A feature-rich smartwatch to stay connected and track your activities.",
+      "category": "Electronics",
+      "quantity": 35,
+      "price": 199.99
+    },
+    {
+      "name": "Travel Toiletry Kit",
+      "description": "A compact and organized toiletry kit for hassle-free travel.",
+      "category": "Travel",
+      "quantity": 20,
+      "price": 24.50
+    },
+    {
+      "name": "Bluetooth Speaker",
+      "description": "Portable Bluetooth speaker for music lovers on the go.",
+      "category": "Electronics",
+      "quantity": 20,
+      "price": 49.99
+    },
+    {
+      "name": "Travel Luggage Set",
+      "description": "A set of durable and stylish luggage for your travel needs.",
+      "category": "Travel",
+      "quantity": 15,
+      "price": 149.95
+    },
+    {
+      "name": "Digital Thermometer",
+      "description": "Accurate digital thermometer for quick temperature readings.",
+      "category": "Health",
+      "quantity": 30,
+      "price": 9.50
+    },
+    {
+      "name": "Men's Sports Shoes",
+      "description": "Comfortable and supportive sports shoes for active men.",
+      "category": "Fashion",
+      "quantity": 25,
+      "price": 69.99
+    },
+    {
+      "name": "4K Ultra HD TV",
+      "description": "Immersive 4K Ultra HD TV for cinematic viewing experiences.",
+      "category": "Electronics",
+      "quantity": 10,
+      "price": 899.00
+    },
+    {
+      "name": "Travel Adapter",
+      "description": "Universal travel adapter to stay connected during international trips.",
+      "category": "Travel",
+      "quantity": 40,
+      "price": 14.99
+    },
+    {
+      "name": "Blood Pressure Monitor",
+      "description": "Easy-to-use blood pressure monitor for regular health check-ups.",
+      "category": "Health",
+      "quantity": 20,
+      "price": 39.95
+    },
+    {
+      "name": "Women's Fashion Sneakers",
+      "description": "Stylish and versatile sneakers for fashion-forward women.",
+      "category": "Fashion",
+      "quantity": 30,
+      "price": 59.99
+    },
+    {
+      "name": "Wireless Earbuds",
+      "description": "True wireless earbuds with noise-canceling for an enhanced audio experience.",
+      "category": "Electronics",
+      "quantity": 50,
+      "price": 89.99
+    },
+    {
+      "name": "Travel Neck Wallet",
+      "description": "Secure neck wallet to keep your essentials safe while traveling.",
+      "category": "Travel",
+      "quantity": 15,
+      "price": 17.50
+    },
+    {
+      "name": "Wireless Gaming Mouse",
+      "description": "High-performance wireless gaming mouse for precision and accuracy.",
+      "category": "Electronics",
+      "quantity": 25,
+      "price": 69.99
+    },
+    {
+      "name": "Travel Neck Pillow with Hood",
+      "description": "Travel neck pillow with an attached hood for added comfort during naps.",
+      "category": "Travel",
+      "quantity": 20,
+      "price": 34.95
+    },
+    {
+      "name": "Fitness Resistance Bands Set",
+      "description": "A set of resistance bands for versatile workouts and muscle training.",
+      "category": "Health",
+      "quantity": 30,
+      "price": 19.99
+    },
+    {
+      "name": "Women's Classic Watch",
+      "description": "Elegant and timeless classic watch for women's everyday style.",
+      "category": "Fashion",
+      "quantity": 15,
+      "price": 89.50
+    },
+    {
+      "name": "Smart Home Security Camera",
+      "description": "A smart security camera for monitoring your home remotely.",
+      "category": "Electronics",
+      "quantity": 40,
+      "price": 129.00
+    },
+    {
+      "name": "Travel Packing Cubes Set",
+      "description": "Organized packing cubes set to keep your luggage tidy and neat.",
+      "category": "Travel",
+      "quantity": 25,
+      "price": 24.99
+    },
+    {
+      "name": "Digital Blood Glucose Monitor",
+      "description": "Digital blood glucose monitor for easy and regular blood sugar testing.",
+      "category": "Health",
+      "quantity": 35,
+      "price": 49.95
+    },
+    {
+      "name": "Men's Leather Wallet",
+      "description": "A stylish and durable leather wallet with multiple card slots.",
+      "category": "Fashion",
+      "quantity": 30,
+      "price": 39.99
+    },
+    {
+      "name": "Wireless Noise-Canceling Headphones",
+      "description": "Wireless headphones with advanced noise-canceling technology.",
+      "category": "Electronics",
+      "quantity": 10,
+      "price": 159.99
+    },
+    {
+      "name": "Travel Portable Water Purifier",
+      "description": "Portable water purifier for safe drinking water during outdoor adventures.",
+      "category": "Travel",
+      "quantity": 15,
+      "price": 49.50
+    }
+  ]
+}

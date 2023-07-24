@@ -153,11 +153,13 @@ def add_products():
     if "products" in input_json:
         result = list()
         for json_element in input_json["products"]:
-            result.append(add_product(json_element))
+            add_response = add_product(json_element)
+            if add_response[1] != 200:
+                return add_response
+            result.append(add_response[0].json)
         return jsonify({"success": result}), 200
 
-    result = add_product(input_json)
-    return jsonify({"success": result}), 200
+    return add_product(input_json)
 
 
 def add_product(input_json):
