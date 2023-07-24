@@ -116,7 +116,10 @@ def delete_products():
     if "products" in input_json:
         result = list()
         for json_element in input_json["products"]:
-            result.append(delete_product(json_element["product_id"]))
+            response_single = delete_product(json_element["product_id"])
+            if response_single[1] != 200:
+                return response_single
+            result.append(response_single[0].json)
         return jsonify({"success": result}), 200
 
     result = delete_product(input_json["product_id"])
@@ -153,10 +156,10 @@ def add_products():
     if "products" in input_json:
         result = list()
         for json_element in input_json["products"]:
-            add_response = add_product(json_element)
-            if add_response[1] != 200:
-                return add_response
-            result.append(add_response[0].json)
+            response_single = add_product(json_element)
+            if response_single[1] != 200:
+                return response_single
+            result.append(response_single[0].json)
         return jsonify({"success": result}), 200
 
     return add_product(input_json)
