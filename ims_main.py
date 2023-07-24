@@ -1,3 +1,4 @@
+import os
 import socket
 from pathlib import Path
 
@@ -45,4 +46,7 @@ def health_check():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    if "IMS_SERVICE_SERVICE_PORT" in os.environ:
+        app.run(host="0.0.0.0", port=int(os.environ["IMS_SERVICE_SERVICE_PORT"]))
+    else:
+        app.run(host="0.0.0.0", port=5000)
