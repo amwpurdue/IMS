@@ -35,7 +35,6 @@
             contentType: "application/json",
             success: function(response) {
                 // Handle the response from the server
-                console.log(response);
                 alert("Data submitted successfully!");
             },
             error: function(error) {
@@ -49,8 +48,6 @@
     function deleteES() {
         document.getElementById("deleteES").disabled = true
         let productJson = {{ missingMongo|tojson }}
-        console.log(productJson)
-        console.log({"products": productJson})
         $.ajax({
             type: "DELETE",
             url: "/products/",
@@ -58,7 +55,6 @@
             contentType: "application/json",
             success: function(response) {
                 // Handle the response from the server
-                console.log(response);
                 alert("Data submitted successfully!");
             },
             error: function(error) {

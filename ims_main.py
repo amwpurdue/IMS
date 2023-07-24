@@ -20,7 +20,6 @@ def index():
         "computerName": socket.gethostname() + " (" + socket.gethostbyname("localhost") + ")",
         "products": products_json["products"]
     }
-    print(template_dict)
     return template.render(template_dict)
 
 

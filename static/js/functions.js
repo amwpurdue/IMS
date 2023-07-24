@@ -12,8 +12,6 @@ function createCollapsible(element) {
 document
 
 function buy(product) {
-    console.log("test " + product.product_id)
-
     $.ajax({
         type: "POST",
         url: "/products/" + product.product_id,
