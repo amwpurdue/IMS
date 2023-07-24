@@ -19,7 +19,13 @@ function buy(product) {
         success: function(response) {
             // Handle the response from the server
             let qty = document.getElementById("quantity-" + product.product_id)
-            $(qty).html(response["product"]["quantity"])
+            let remainingQty = parseInt(response["product"]["quantity"])
+            if(remainingQty <= 0) {
+                let qtyRow = document.getElementById("quantity-row-" + product.product_id)
+                $(qtyRow).remove()
+            }
+
+            $(qty).html(remainingQty)
         },
         error: function(error) {
             // Handle any errors that occurred during the AJAX request

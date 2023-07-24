@@ -1,7 +1,8 @@
-from flask import Blueprint, request, jsonify
-from pymongo import MongoClient, ReturnDocument
 import os
 import uuid
+
+from flask import Blueprint, request, jsonify
+from pymongo import MongoClient, ReturnDocument
 
 from search_handler import SearchHandler
 
@@ -51,7 +52,7 @@ def get_products():
     db = get_database()
 
     product_list = []
-    for p in db[PRODUCTS_COL].find():
+    for p in db[PRODUCTS_COL].find({"quantity": {"$gt": 0}}):
         product_list.append(mongo_product_to_dict(p))
     return jsonify({"products": product_list})
 

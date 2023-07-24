@@ -71,7 +71,7 @@
             <th>Buy it now</th>
         </tr>
         {% for product in products -%}
-        <tr>
+        <tr id="quantity-row-{{ product.product_id }}">
             <td>
                 <div style="font-weight: bold; font-size: 20px">{{ product.name }}</div>
                 {{ product.description }}

@@ -1,7 +1,8 @@
-from flask import Flask, jsonify
-from jinja2 import Environment, FileSystemLoader
-from pathlib import Path
 import socket
+from pathlib import Path
+
+from flask import Flask
+from jinja2 import Environment, FileSystemLoader
 
 import ims_api
 from ims_api import products_page
