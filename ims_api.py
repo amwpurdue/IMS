@@ -14,6 +14,14 @@ if "es_index" in os.environ:
 else:
     search_handler = SearchHandler("search-ims-test")
 
+INPUT_MAP = [
+    ("name", str),
+    ("category", str),
+    ("price", float),
+    ("quantity", int),
+    ("description", str)
+]
+
 
 def get_database():
     if "db_root_password" in os.environ:
@@ -30,22 +38,12 @@ def get_database():
     return client[os.environ["db_name"]]
 
 
-def get_product_from_db_result(db_result):
+def mongo_product_to_dict(db_result):
     if db_result is None:
         return None
 
-    pid = db_result.get("product_id")
-    s_results = search_handler.get_product(pid)
-    full_product = {
-        "product_id": db_result.get("product_id"),
-        "name": db_result.get("name"),
-        "category": db_result.get("category"),
-        "price": db_result.get("price"),
-        "quantity": db_result.get("quantity")
-    }
-    if s_results is None:
-        return full_product
-    return full_product | s_results["_source"]
+    fields = ["product_id"] + [x[0] for x in INPUT_MAP]
+    return dict([(key, db_result[key]) for key in fields])
 
 
 @products_page.route("/", methods=["GET"])
@@ -54,8 +52,35 @@ def get_products():
 
     product_list = []
     for p in db[PRODUCTS_COL].find():
-        product_list.append(get_product_from_db_result(p))
+        product_list.append(mongo_product_to_dict(p))
     return jsonify({"products": product_list})
+
+
+@products_page.route("/health", methods=["GET"])
+def health_check():
+    all_from_search = set(search_handler.get_all())
+
+    db = get_database()
+    mongo_list = set([p.get("product_id") for p in db[PRODUCTS_COL].find()])
+
+    in_both = all_from_search.intersection(set(mongo_list))
+    only_in_search = all_from_search - in_both
+    only_in_mongo = mongo_list - in_both
+
+    delete_form = '<form action="/products/delete" method="POST">' \
+                  + '<input type="hidden" name="product_id" id="product_id" value="' + str(only_in_search) + '" />' \
+                  + '<input type="submit" value="Delete extras from ElasticSearch" />' \
+                  + '</form>'
+
+    page_builder = "<p>Healthy products: " + str(len(in_both)) + "</p>" \
+                   + "<p>Missing in Mongo: " + str(len(only_in_search)) + "</p>"
+    if len(only_in_search) > 0:
+        page_builder += "<p>" + str(only_in_search) + "</p>"
+    page_builder += "<p>Missing in ElasticSearch: " + str(len(only_in_mongo)) + "</p>"
+    if len(only_in_mongo) > 0:
+        page_builder += "<p>" + str(only_in_mongo) + "</p>"
+    page_builder += delete_form
+    return page_builder
 
 
 @products_page.route("/<product_id>/", methods=["GET"])
@@ -63,12 +88,39 @@ def get_product(product_id):
     db = get_database()
 
     p = db[PRODUCTS_COL].find_one({"product_id": product_id})
-    return jsonify(get_product_from_db_result(p))
+    return jsonify(mongo_product_to_dict(p))
 
 
 @products_page.route("/<product_id>/", methods=["DELETE"])
 def delete_product(product_id):
-    return "deleted " + product_id
+    db = get_database()
+
+    db[PRODUCTS_COL].delete_one({"product_id": product_id})
+    search_handler.delete_product(product_id)
+    return jsonify({"success": product_id}), 200
+
+
+@products_page.route("/", methods=["DELETE"])
+def delete_products():
+    """
+    json should be of the form
+    single product {"product_id": "uuid"}
+    or
+    {"products":[array of products]"}
+    """
+
+    if request.headers.get('Content-Type') != 'application/json':
+        return jsonify({"error": "json content-type required"}), 400
+
+    input_json = request.json
+    if "products" in input_json:
+        result = list()
+        for json_element in input_json["products"]:
+            result.append(delete_product(json_element["product_id"]))
+        return jsonify({"success": result}), 200
+
+    result = delete_product(input_json["product_id"])
+    return jsonify({"success": result}), 200
 
 
 @products_page.route("/search", methods=["GET"])
@@ -80,24 +132,39 @@ def search_products():
     for res in search_handler.search_product(keywords):
         p = db[PRODUCTS_COL].find_one({"product_id": res})
         if p is not None:
-            product_list.append(get_product_from_db_result(p))
+            product_list.append(mongo_product_to_dict(p))
     return product_list
 
 
-INPUT_NAMES = ["name", "category", "price", "quantity", "description"]
-
-
 @products_page.route("/", methods=["POST"])
-def add_product():
-    if request.headers.get('Content-Type') == 'application/json':
-        input_dict = request.json
-    else:
-        input_dict = request.form.to_dict()
+def add_products():
+    """
+    json should be of the form
+    single product {"name": string, etc}
 
+    or
+
+    {"products":[array of products]"}
+    """
+    if request.headers.get('Content-Type') != 'application/json':
+        return jsonify({"error": "json content-type required"}), 400
+
+    input_json = request.json
+    if "products" in input_json:
+        result = list()
+        for json_element in input_json["products"]:
+            result.append(add_product(json_element))
+        return jsonify({"success": result}), 200
+
+    result = add_product(input_json)
+    return jsonify({"success": result}), 200
+
+
+def add_product(input_json):
     product_dict = dict()
     try:
-        for key in INPUT_NAMES:
-            add_input(key, input_dict, product_dict)
+        for key, data_type in INPUT_MAP:
+            add_input(key, data_type, input_json, product_dict)
     except Exception as e:
         return str(e)
 
@@ -108,11 +175,16 @@ def add_product():
     db[PRODUCTS_COL].insert_one(product_dict)
 
     search_handler.add_product(product_id, product_dict)
-    return "Successfully added new product. <br><a href=\"/\">Home.</a>"
+    return jsonify({"success": product_id}), 200
 
 
-def add_input(key, input_dict, output_dict):
-    if key not in request.form or len(request.form.get(key).strip()) == 0:
+def add_input(key, data_type, input_dict, output_dict):
+    if key not in input_dict or len(str(input_dict[key]).strip()) == 0:
         raise Exception("Missing " + key)
 
-    output_dict[key] = input_dict[key]
+    if data_type == str:
+        output_dict[key] = str(input_dict[key])
+    elif data_type == int:
+        output_dict[key] = int(input_dict[key])
+    elif data_type == float:
+        output_dict[key] = float(input_dict[key])
