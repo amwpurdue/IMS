@@ -12,18 +12,6 @@ app.register_blueprint(products_page)
 @app.route("/")
 def index():
     environment = Environment(loader=FileSystemLoader("templates/"))
-    template = environment.get_template("index.html")
-
-    template_dict = {
-        "computerName": socket.gethostname() + " (" + socket.gethostbyname("localhost") + ")"
-    }
-
-    return template.render(template_dict)
-
-
-@app.route("/front")
-def frontend():
-    environment = Environment(loader=FileSystemLoader("templates/"))
     template = environment.get_template("front.html")
 
     products_json = ims_api.get_products().json

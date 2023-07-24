@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        .products-collapsible {
+        .collapsible {
           background-color: #777;
           color: white;
           cursor: pointer;
@@ -38,15 +38,12 @@
           padding: 8px;
         }
         tr:nth-child(even){background-color: #f2f2f2}
-
-
-
     </style>
 </head>
 <body>
 
 <h1>Welcome {{ computerName }}</h1>
-<button type="button" class="products-collapsible">Products</button>
+<button type="button" class="collapsible" id="products">Products</button>
 <div class="content">
     <p>
         {% if products is defined and products|length > 0 %}
@@ -71,28 +68,21 @@
     {% endif %}
     </p>
 </div>
+<p></p>
+
+<button type="button" class="collapsible" id="maintenance">Maintenance</button>
+<div class="content">
+    <p><a href="/static/newproduct.html">Add a product</a></p>
+    <p><a href="/static/deleteproduct.html">Delete a product</a></p>
+    <p><a href="/products/health">Product Health Check</a></p>
+</div>
 
 
-<p><a href="/static/newproduct.html">Add a product</a></p>
-<p><a href="/static/deleteproduct.html">Delete a product</a></p>
 
+<script src="/static/js/functions.js"></script>
 <script>
-var coll = document.getElementsByClassName("products-collapsible");
-var i;
-
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.display === "block") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "block";
-    }
-  });
-}
-
-
+createCollapsible(document.getElementById("products"));
+createCollapsible(document.getElementById("maintenance"));
 
 </script>
 </body>
