@@ -6,15 +6,15 @@
 </head>
 <body>
   <h1>Product Management</h1>
-  <p>
-    <form id="delete_product">
-      <label for="product_id">Product ID:</label>
-      <input type="text" id="product_id" name="product_id" required>
-      <br>
-      <br>
-      <button type="button" onclick="deleteProduct()">Delete Product</button>
-    </form>
-  </p>
+<!--  <p>-->
+<!--    <form id="delete_product">-->
+<!--      <label for="product_id">Product ID:</label>-->
+<!--      <input type="text" id="product_id" name="product_id" required>-->
+<!--      <br>-->
+<!--      <br>-->
+<!--      <button type="button" onclick="deleteProduct()">Delete Product</button>-->
+<!--    </form>-->
+<!--  </p>-->
   <p>
     <form id="delete_all">
       <button type="button" onclick="getAll(deleteAll)">Delete all Products</button>
@@ -29,13 +29,9 @@
         url: "/products/",
         contentType: "application/json",
         success: function(response) {
-          // Handle the response from the server
-          console.log(response);
-          alert("Data submitted successfully!");
           successFunction(response)
         },
         error: function(error) {
-          // Handle any errors that occurred during the AJAX request
           console.error(error);
           alert("An error occurred while submitting the data.");
         }
@@ -55,8 +51,7 @@
         contentType: "application/json",
         success: function(response) {
           // Handle the response from the server
-          console.log(response);
-          alert("Data submitted successfully!");
+          alert("Data successfully deleted!");
         },
         error: function(error) {
           // Handle any errors that occurred during the AJAX request
@@ -66,13 +61,11 @@
       });
     }
     function deleteAll(getAllResponse) {
-      console.log('getAllResponse:' + getAllResponse)
       if (!getAllResponse.products || !Array.isArray(getAllResponse.products)) {
         throw new Error("Missing data from getAll response");
       }
 
       const productIds = getAllResponse.products;
-      console.log(productIds)
 
       $.ajax({
         type: "DELETE",
@@ -81,8 +74,7 @@
         contentType: "application/json",
         success: function(response) {
           // Handle the response from the server
-          console.log(response);
-          alert("Data submitted successfully!");
+          alert("Data successfully deleted!");
         },
         error: function(error) {
           // Handle any errors that occurred during the AJAX request

@@ -59,7 +59,7 @@
 
 <h1>Welcome {{ computerName }}</h1>
 <button type="button" class="collapsible" id="products">Products</button>
-<div class="content" style="overflow-x:auto">
+<div class="content" style="overflow-x:auto; display:block">
     <p>
         {% if products is defined and products|length > 0 %}
     <table id="product-table">
@@ -92,7 +92,7 @@
 
 <button type="button" class="collapsible" id="maintenance">Maintenance</button>
 <div class="content">
-    <p><a href="/static/newproduct.html">Add a product</a></p>
+<!--    <p><a href="/static/newproduct.html">Add a product</a></p>-->
     <p><a href="/static/deleteproduct.html">Delete a product</a></p>
     <p><a href="/health">Product Health Check</a></p>
 </div>
