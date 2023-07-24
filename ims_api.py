@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 import os
 import uuid
 
@@ -56,7 +56,6 @@ def get_products():
     return jsonify({"products": product_list})
 
 
-@products_page.route("/health", methods=["GET"])
 def health_check():
     all_from_search = set(search_handler.get_all())
 
@@ -67,20 +66,7 @@ def health_check():
     only_in_search = all_from_search - in_both
     only_in_mongo = mongo_list - in_both
 
-    delete_form = '<form action="/products/delete" method="POST">' \
-                  + '<input type="hidden" name="product_id" id="product_id" value="' + str(only_in_search) + '" />' \
-                  + '<input type="submit" value="Delete extras from ElasticSearch" />' \
-                  + '</form>'
-
-    page_builder = "<p>Healthy products: " + str(len(in_both)) + "</p>" \
-                   + "<p>Missing in Mongo: " + str(len(only_in_search)) + "</p>"
-    if len(only_in_search) > 0:
-        page_builder += "<p>" + str(only_in_search) + "</p>"
-    page_builder += "<p>Missing in ElasticSearch: " + str(len(only_in_mongo)) + "</p>"
-    if len(only_in_mongo) > 0:
-        page_builder += "<p>" + str(only_in_mongo) + "</p>"
-    page_builder += delete_form
-    return page_builder
+    return in_both, only_in_search, only_in_mongo
 
 
 @products_page.route("/<product_id>/", methods=["GET"])
@@ -98,6 +84,20 @@ def delete_product(product_id):
     db[PRODUCTS_COL].delete_one({"product_id": product_id})
     search_handler.delete_product(product_id)
     return jsonify({"success": product_id}), 200
+
+
+@products_page.route("/<product_id>/", methods=["POST"])
+def buy_product(product_id):
+    db = get_database()
+    update_response = db[PRODUCTS_COL].find_one_and_update(
+        {"product_id": product_id},
+        {"$inc": {"quantity": -1}},
+        return_document=ReturnDocument.AFTER
+    )
+    if update_response is not None:
+        return jsonify({"success": product_id, "product": mongo_product_to_dict(update_response)}), 200
+
+    return jsonify({"error": update_response}), 500
 
 
 @products_page.route("/", methods=["DELETE"])

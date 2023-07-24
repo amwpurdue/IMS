@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="/static/js/functions.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         .collapsible {
@@ -12,7 +14,7 @@
           border: none;
           text-align: left;
           outline: none;
-          font-size: 15px;
+          font-size: 16px;
         }
 
         .active, .collapsible:hover {
@@ -33,33 +35,51 @@
           border: 1px solid #ddd;
         }
 
+        th {
+          font-size: 24px
+        }
         th, td {
           text-align: left;
           padding: 8px;
         }
-        tr:nth-child(even){background-color: #f2f2f2}
+        tr:nth-child(even){
+            background-color: #f2f2f2
+        }
+
+        a#cart {
+            display:block;
+            width:32px;
+            height:32px;
+            background:url("/static/images/cart-line-icon.svg");
+        }
+
     </style>
 </head>
 <body>
 
 <h1>Welcome {{ computerName }}</h1>
 <button type="button" class="collapsible" id="products">Products</button>
-<div class="content">
+<div class="content" style="overflow-x:auto">
     <p>
         {% if products is defined and products|length > 0 %}
     <table id="product-table">
         <tr>
             <th style="font-size: 24px">Product</th>
-            <th style="font-size: 24px">Description</th>
+            <th style="font-size: 24px">Category</th>
             <th style="font-size: 24px">Price</th>
             <th style="font-size: 24px">Quantity Remaining</th>
+            <th>Buy it now</th>
         </tr>
         {% for product in products -%}
         <tr>
-            <th>{{ product.name }}</th>
-            <td>{{ product.description }}</td>
+            <td>
+                <div style="font-weight: bold; font-size: 20px">{{ product.name }}</div>
+                {{ product.description }}
+            </td>
+            <td>{{ product.category }}</td>
             <td>{{ product.price }}</td>
-            <td>{{ product.quantity }}</td>
+            <td id="quantity-{{ product.product_id }}">{{ product.quantity }}</td>
+            <td><a href="javascript:void(0)" onclick="buy({{ product }})" id="cart"></a></td>
         </tr>
         {% endfor %}
     </table>
@@ -74,15 +94,14 @@
 <div class="content">
     <p><a href="/static/newproduct.html">Add a product</a></p>
     <p><a href="/static/deleteproduct.html">Delete a product</a></p>
-    <p><a href="/products/health">Product Health Check</a></p>
+    <p><a href="/health">Product Health Check</a></p>
 </div>
 
 
-
-<script src="/static/js/functions.js"></script>
 <script>
 createCollapsible(document.getElementById("products"));
 createCollapsible(document.getElementById("maintenance"));
+
 
 </script>
 </body>

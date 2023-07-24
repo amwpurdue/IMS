@@ -1,0 +1,43 @@
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+{% if (goodProducts|length != 0) or (missingMongo|length != 0) or (missingES|length != 0) %}
+<p>Healthy products: {{ goodProducts|length }}</p>
+<p>Missing in Mongo: {{ missingMongo|length }}</p>
+<p>Missing in ElasticSearch: {{ missingES|length }}</p>
+{% else %}
+<p>No products.</p>
+<p>
+    <button id="sampleData" onclick="sendSampleData()">Create Sample Data</button>
+</p>
+{% endif %}
+<script>
+    function sendSampleData() {
+        document.getElementById("sampleData").disabled = true
+
+        $.ajax({
+            type: "POST",
+            url: "/products/",
+            data: JSON.stringify({{ sampleProducts }}),
+            contentType: "application/json",
+            success: function(response) {
+                // Handle the response from the server
+                console.log(response);
+                alert("Data submitted successfully!");
+            },
+            error: function(error) {
+                // Handle any errors that occurred during the AJAX request
+                console.error(error);
+                alert("An error occurred while submitting the data.");
+                document.getElementById("sampleData").disabled = false
+            }
+        });
+    }
+
+</script>
+
+</body>
+</html>

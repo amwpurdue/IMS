@@ -1,5 +1,6 @@
 from flask import Flask
 from jinja2 import Environment, FileSystemLoader
+from pathlib import Path
 import socket
 
 import ims_api
@@ -21,6 +22,26 @@ def index():
     }
     print(template_dict)
     return template.render(template_dict)
+
+
+@app.route("/health")
+def health_check():
+    environment = Environment(loader=FileSystemLoader("templates/"))
+    template = environment.get_template("health.html")
+
+    in_both, only_in_search, only_in_mongo = ims_api.health_check()
+
+    sample_products = Path("static/sample_products.json").read_text()
+
+    health_dict = {
+        "computerName": socket.gethostname() + " (" + socket.gethostbyname("localhost") + ")",
+        "goodProducts": in_both,
+        "missingMongo": only_in_search,
+        "missingES": only_in_mongo,
+        "sampleProducts": sample_products
+    }
+    print(health_dict)
+    return template.render(health_dict)
 
 
 if __name__ == "__main__":
