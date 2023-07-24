@@ -1,0 +1,75 @@
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+{% if (goodProducts|length != 0) or (missingMongo|length != 0) or (missingES|length != 0) %}
+<p>Healthy products: {{ goodProducts|length }}</p>
+
+<p>Missing in Mongo: {{ missingMongo|length }}</p>
+{% if (missingMongo|length != 0)%}
+    <button id="deleteES" onclick="deleteES()">Delete from ElasticSearch</button>
+{% endif %}
+
+<p>Missing in ElasticSearch: {{ missingES|length }}</p>
+{% if (missingES|length != 0)%}
+    <button id="backupFromMongo" onclick="backupFromMongo()">Upload to ElasticSearch (TODO)</button>
+{% endif %}
+
+{% else %}
+<p>No products.</p>
+<p>
+    <button id="sampleData" onclick="sendSampleData()">Create Sample Data</button>
+</p>
+{% endif %}
+
+<script>
+    function sendSampleData() {
+        document.getElementById("sampleData").disabled = true
+
+        $.ajax({
+            type: "POST",
+            url: "/products/",
+            data: JSON.stringify({{ sampleProducts }}),
+            contentType: "application/json",
+            success: function(response) {
+                // Handle the response from the server
+                alert("Data submitted successfully!");
+            },
+            error: function(error) {
+                // Handle any errors that occurred during the AJAX request
+                console.error(error);
+                alert("An error occurred while submitting the data.");
+                document.getElementById("sampleData").disabled = false
+            }
+        });
+    }
+    function deleteES() {
+        document.getElementById("deleteES").disabled = true
+        let productJson = {{ missingMongo|tojson }}
+        $.ajax({
+            type: "DELETE",
+            url: "/products/",
+            data: JSON.stringify({"products": productJson}),
+            contentType: "application/json",
+            success: function(response) {
+                // Handle the response from the server
+                alert("Data submitted successfully!");
+            },
+            error: function(error) {
+                // Handle any errors that occurred during the AJAX request
+                console.error(error);
+                alert("An error occurred while submitting the data.");
+                document.getElementById("sampleData").disabled = false
+            }
+        });
+    }
+    function backupFromMongo() {
+        console.log("TODO")
+    }
+
+</script>
+
+</body>
+</html>

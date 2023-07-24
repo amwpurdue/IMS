@@ -45,6 +45,26 @@ def health_check():
     return template.render(health_dict)
 
 
+@app.route("/stats")
+def analytics():
+    environment = Environment(loader=FileSystemLoader("templates/"))
+    template = environment.get_template("stats.html")
+
+    in_both, only_in_search, only_in_mongo = ims_api.health_check()
+
+    sample_products = Path("static/sample_products.json").read_text()
+
+    health_dict = {
+        "computerName": socket.gethostname() + " (" + socket.gethostbyname("localhost") + ")",
+        "goodProducts": [{"product_id": x} for x in in_both],
+        "missingMongo": [{"product_id": x} for x in only_in_search],
+        "missingES": [{"product_id": x} for x in only_in_mongo],
+        "sampleProducts": sample_products
+    }
+
+    return template.render(health_dict)
+
+
 if __name__ == "__main__":
     if "IMS_SERVICE_SERVICE_PORT" in os.environ:
         app.run(host="0.0.0.0", port=int(os.environ["IMS_SERVICE_SERVICE_PORT"]))

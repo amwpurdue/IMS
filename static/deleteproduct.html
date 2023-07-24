@@ -27,7 +27,7 @@
       $.ajax({
         type: "GET",
         url: "/products/",
-        contentType: "application/json",
+        data: {"all":"1"},
         success: function(response) {
           successFunction(response)
         },
@@ -40,7 +40,7 @@
     function deleteProduct() {
       // Get the form data
       var formData = {
-        product_id: document.getElementById("product_id").value,
+        product_id: document.getElementById("product_id").value
       };
 
       // Make the AJAX POST request

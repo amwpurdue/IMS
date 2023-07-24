@@ -52,7 +52,12 @@ def get_products():
     db = get_database()
 
     product_list = []
-    for p in db[PRODUCTS_COL].find({"quantity": {"$gt": 0}}):
+    if "all" in request.args and request.args["all"] == "1":
+        find_dict = {}
+    else:
+        find_dict = {"quantity": {"$gt": 0}}
+
+    for p in db[PRODUCTS_COL].find(find_dict):
         product_list.append(mongo_product_to_dict(p))
     return jsonify({"products": product_list})
 
@@ -178,6 +183,7 @@ def add_product(input_json):
 
     product_id = str(uuid.uuid4())
     product_dict["product_id"] = product_id
+    product_dict["sold"] = 0
     db[PRODUCTS_COL].insert_one(product_dict)
 
     search_handler.add_product(product_id, product_dict)
@@ -194,3 +200,10 @@ def add_input(key, data_type, input_dict, output_dict):
         output_dict[key] = int(input_dict[key])
     elif data_type == float:
         output_dict[key] = float(input_dict[key])
+
+
+@products_page.route("/analytics", methods=["GET"])
+def get_analytics():
+    db = get_database()
+
+    return "TODO"
