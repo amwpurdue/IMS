@@ -1,0 +1,57 @@
+.collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  width: 50%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 16px;
+}
+
+.active, .collapsible:hover {
+  background-color: #lightgray;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+th {
+  font-size: 24px
+}
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+tr:nth-child(even){
+    background-color: #f2f2f2
+}
+
+a#cart {
+    display:block;
+    width:32px;
+    height:32px;
+    background:url("/static/images/cart-line-icon.svg");
+}
+
+.header-card {
+    position: absolute; // absolute is absolute to a relative element
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px;
+    background: #777;
+    color: white;
+}

@@ -1,11 +1,16 @@
 <html>
 <head>
-  <title>Product Management</title>
+    <title>Product Management</title>
+    <script src="/static/js/functions.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
   <h1>Product Management</h1>
 
+<button type="button" class="collapsible" id="health">Health Check</button>
+<div class="content" style="overflow-x:auto; display:block">
 {% if (goodProducts|length != 0) or (missingMongo|length != 0) or (missingES|length != 0) %}
 <p>Healthy products: {{ goodProducts|length }}</p>
 
@@ -18,6 +23,12 @@
 {% if (missingES|length != 0)%}
 <button id="backupFromMongo" onclick="backupFromMongo()">Upload to ElasticSearch (TODO)</button>
 {% endif %}
+{% endif %}
+</div>
+
+<button type="button" class="collapsible" id="products">Products</button>
+<div class="content" style="overflow-x:auto; display:block">
+{% if (goodProducts|length != 0) or (missingMongo|length != 0) or (missingES|length != 0) %}
 <p>
     <button id="deleteAllButton" type="button" onclick="getAll(deleteAll)">Delete all Products</button>
 </p>
@@ -28,7 +39,10 @@
 </p>
 {% endif %}
 
+
 <script>
+createCollapsible(document.getElementById("health"));
+createCollapsible(document.getElementById("products"));
     function sendSampleData() {
         document.getElementById("sampleData").disabled = true
 
