@@ -167,6 +167,9 @@ def delete_products():
 
 @products_page.route("/search", methods=["GET"])
 def search_products():
+    if "keywords" not in request.args:
+        return get_products()
+
     keywords = request.args.get("keywords")
     db = get_database()
 
