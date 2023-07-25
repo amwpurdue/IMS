@@ -287,6 +287,14 @@ def get_analytics():
             "revenue": {"$sum": "$revenue"}
         }
     }, {
+        "$project": {
+            "sold": 1,
+            "revenue": 1,
+            "average_sale_price": {
+                "$divide": ["$revenue", "$sold"]
+            }
+        }
+    }, {
         "$sort": {"sold": -1}
     }])
 
