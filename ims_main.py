@@ -2,7 +2,7 @@ import os
 import socket
 from pathlib import Path
 
-from flask import Flask
+from flask import Flask, request
 from jinja2 import Environment, FileSystemLoader
 
 import ims_api
@@ -17,11 +17,19 @@ def index():
     environment = Environment(loader=FileSystemLoader("templates/"))
     template = environment.get_template("front.html")
 
-    products_json = ims_api.all_products()
     template_dict = {
-        "computerName": socket.gethostname() + " (" + socket.gethostbyname("localhost") + ")",
-        "products": products_json
+        "computerName": socket.gethostname() + " (" + socket.gethostbyname("localhost") + ")"
     }
+
+    if "keywords" in request.args:
+        keywords = request.args["keywords"]
+        products_json = ims_api.get_products_with_keywords(keywords)
+        template_dict.update({"search_keywords": keywords})
+    else:
+        products_json = ims_api.all_products()
+
+    template_dict.update({"products": products_json})
+
     return template.render(template_dict)
 
 

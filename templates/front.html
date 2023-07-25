@@ -14,7 +14,31 @@
 <div class="content" style="overflow-x:auto; display:block">
     <p>
         {% if products is defined and products|length > 0 %}
+
     <table id="product-table">
+        <tr>
+            {% if search_keywords is defined %}
+            <td colspan="4" style="border: 0px; text-align: right;">
+                <form action="/">
+                    <label style="font-size: 14px;" for="cancel">{{ search_keywords }}</label>
+                    <button id="cancel-2" type="submit" class="cancel-button"></button>
+                </form>
+            </td>
+            <th colspan="1" style="text-align: right">
+                <form action="/">
+                    <input type="text" placeholder="Search..." name="keywords">
+                    <button type="submit">Submit</button>
+                </form>
+            </th>
+            {% else %}
+            <th colspan="5" style="text-align: right">
+                <form action="/">
+                    <input type="text" placeholder="Search..." name="keywords">
+                    <button type="submit">Submit</button>
+                </form>
+            </th>
+            {% endif %}
+        </tr>
         <tr>
             <th style="font-size: 24px">Product</th>
             <th style="font-size: 24px">Category</th>
@@ -37,6 +61,26 @@
     </table>
     {% else %}
     No products found.
+
+    <table width="100%" style="border: 0px; text-align: right; width: 100%;">
+        <tr>
+            {% if search_keywords is defined %}
+            <td style="border: 0px; text-align: right;">
+                <form action="/">
+                    <label style="font-size: 14px;" for="cancel">{{ search_keywords }}</label>
+                    <button id="cancel" type="submit" class="cancel-button"></button>
+                </form>
+            </td>
+            {% endif %}
+            <td width="240">
+                <form action="/">
+                    <input type="text" placeholder="Search..." name="keywords">
+                    <button type="submit">Submit</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
     {% endif %}
     </p>
 </div>

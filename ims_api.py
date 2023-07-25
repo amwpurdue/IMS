@@ -199,8 +199,11 @@ def search_products():
         return get_products()
 
     keywords = request.args.get("keywords")
-    db = get_database()
+    product_list = get_products_with_keywords(keywords)
+    return jsonify({"products": product_list}), 200
 
+
+def get_products_with_keywords(keywords):
     product_list = []
     for res in search_handler.search_product(keywords):
         p = get_product_by_id(res)

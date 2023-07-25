@@ -55,3 +55,41 @@ a#cart {
     background: #777;
     color: white;
 }
+
+.cancel-button {
+  border-radius: 50%;
+  padding: 0.5em;
+  width: 24px;
+  height: 24px;
+  border: 2px solid black;
+  color: black;
+  position: relative;
+}
+.cancel-button:hover {
+  border: 2px solid black;
+  background-color: gray;
+  color: #ffffff;
+}
+
+.cancel-button::before {
+  content: " ";
+  position: absolute;
+  display: block;
+  background-color: black;
+  width: 2px;
+  left: 9px;
+  top: 2px;
+  bottom: 2px;
+  transform: rotate(45deg);
+}
+.cancel-button::after {
+  content: " ";
+  position: absolute;
+  display: block;
+  background-color: black;
+  height: 2px;
+  top:9px;
+  left: 2px;
+  right: 2px;
+  transform: rotate(45deg);
+}
