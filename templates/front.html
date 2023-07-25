@@ -78,8 +78,8 @@
             </td>
             <td>{{ product.category }}</td>
             <td>{{ product.price }}</td>
-            <td id="quantity-{{ product.product_id }}">{{ product.quantity }}</td>
-            <td><a href="javascript:void(0)" onclick="buy({{ product }})" id="cart"></a></td>
+            <td id="quantity-{{ product.product_id }}">{{ product.quantity_remaining }}</td>
+            <td><a href="javascript:void(0)" onclick="buy('{{ product.product_id }}')" id="cart"></a></td>
         </tr>
         {% endfor %}
     </table>

@@ -11,17 +11,17 @@ function createCollapsible(element) {
 }
 document
 
-function buy(product) {
+function buy(product_id) {
     $.ajax({
         type: "POST",
-        url: "/products/" + product.product_id,
+        url: "/products/buy/" + product_id,
         contentType: "application/json",
         success: function(response) {
             // Handle the response from the server
-            let qty = document.getElementById("quantity-" + product.product_id)
-            let remainingQty = parseInt(response["product"]["quantity"])
+            let qty = document.getElementById("quantity-" + product_id)
+            let remainingQty = parseInt(response["product"]["quantity_remaining"])
             if(remainingQty <= 0) {
-                let qtyRow = document.getElementById("quantity-row-" + product.product_id)
+                let qtyRow = document.getElementById("quantity-row-" + product_id)
                 $(qtyRow).remove()
             }
 

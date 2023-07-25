@@ -17,10 +17,10 @@ def index():
     environment = Environment(loader=FileSystemLoader("templates/"))
     template = environment.get_template("front.html")
 
-    products_json = ims_api.get_products().json
+    products_json = ims_api.all_products()
     template_dict = {
         "computerName": socket.gethostname() + " (" + socket.gethostbyname("localhost") + ")",
-        "products": products_json["products"]
+        "products": products_json
     }
     return template.render(template_dict)
 

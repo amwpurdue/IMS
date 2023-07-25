@@ -1,3 +1,4 @@
+import html
 import os
 import uuid
 
@@ -23,6 +24,18 @@ INPUT_MAP = [
     ("description", str)
 ]
 
+PROJECT_DICT = {
+    "product_id": 1,
+    "name": 1,
+    "category": 1,
+    "price": 1,
+    "description": 1,
+    "sold": 1,
+    "quantity_remaining": {
+        "$subtract": ["$quantity", "$sold"]
+    }
+}
+
 
 def get_database():
     if "db_root_password" in os.environ:
@@ -43,23 +56,30 @@ def mongo_product_to_dict(db_result):
     if db_result is None:
         return None
 
-    fields = ["product_id"] + [x[0] for x in INPUT_MAP]
+    fields = ["product_id"] + [x for x in PROJECT_DICT]
     return dict([(key, db_result[key]) for key in fields])
 
 
 @products_page.route("/", methods=["GET"])
 def get_products():
+    product_list = all_products({})
+    return jsonify({"products": product_list}), 200
+
+
+def all_products(find_dict=None):
+    if find_dict is None:
+        find_dict = {"$expr": {"$gt": ["$quantity", "$sold"]}}
     db = get_database()
 
-    product_list = []
-    if "all" in request.args and request.args["all"] == "1":
-        find_dict = {}
-    else:
-        find_dict = {"quantity": {"$gt": 0}}
+    find_result = db[PRODUCTS_COL].aggregate([
+        {"$match": find_dict},
+        {"$project": PROJECT_DICT}
+    ])
 
-    for p in db[PRODUCTS_COL].find(find_dict):
+    product_list = []
+    for p in find_result:
         product_list.append(mongo_product_to_dict(p))
-    return jsonify({"products": product_list})
+    return product_list
 
 
 def health_check():
@@ -77,10 +97,24 @@ def health_check():
 
 @products_page.route("/<product_id>/", methods=["GET"])
 def get_product(product_id):
+    product = get_product_by_id(product_id)
+    if product is not None:
+        return jsonify(product), 200
+
+    return jsonify({"error": product_id + " not found"}), 404
+
+
+def get_product_by_id(product_id):
     db = get_database()
 
-    p = db[PRODUCTS_COL].find_one({"product_id": product_id})
-    return jsonify(mongo_product_to_dict(p))
+    product_result = db[PRODUCTS_COL].aggregate([
+        {"$match": {"product_id": product_id}},
+        {"$project": PROJECT_DICT}
+    ])
+    for x in product_result:
+        return mongo_product_to_dict(x)
+
+    return None
 
 
 @products_page.route("/<product_id>/", methods=["DELETE"])
@@ -92,16 +126,15 @@ def delete_product(product_id):
     return jsonify({"success": product_id}), 200
 
 
-@products_page.route("/<product_id>/", methods=["POST"])
+@products_page.route("/buy/<product_id>/", methods=["POST"])
 def buy_product(product_id):
     db = get_database()
-    update_response = db[PRODUCTS_COL].find_one_and_update(
+    update_response = db[PRODUCTS_COL].update_one(
         {"product_id": product_id},
-        {"$inc": {"quantity": -1}},
-        return_document=ReturnDocument.AFTER
+        {"$inc": {"sold": 1}}
     )
-    if update_response is not None:
-        return jsonify({"success": product_id, "product": mongo_product_to_dict(update_response)}), 200
+    if update_response.modified_count == 1:
+        return jsonify({"success": product_id, "product": get_product_by_id(product_id)}), 200
 
     return jsonify({"error": update_response}), 500
 
@@ -139,9 +172,9 @@ def search_products():
 
     product_list = []
     for res in search_handler.search_product(keywords):
-        p = db[PRODUCTS_COL].find_one({"product_id": res})
+        p = get_product_by_id(res)
         if p is not None:
-            product_list.append(mongo_product_to_dict(p))
+            product_list.append(p)
     return product_list
 
 
@@ -195,7 +228,7 @@ def add_input(key, data_type, input_dict, output_dict):
         raise Exception("Missing " + key)
 
     if data_type == str:
-        output_dict[key] = str(input_dict[key])
+        output_dict[key] = html.escape(str(input_dict[key]))
     elif data_type == int:
         output_dict[key] = int(input_dict[key])
     elif data_type == float:
@@ -206,4 +239,17 @@ def add_input(key, data_type, input_dict, output_dict):
 def get_analytics():
     db = get_database()
 
-    return "TODO"
+    agg = db[PRODUCTS_COL].aggregate([{
+        "$project": {
+            "product_id": 1,
+            "qty_left": {
+                "$subtract": ["$quantity", "$sold"]
+            }
+        }
+    }])
+
+    print(agg)
+    for a in agg:
+        print("  " + str(a))
+
+    return mongo_product_to_dict(db["inventory"].find())
