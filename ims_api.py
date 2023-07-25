@@ -117,6 +117,33 @@ def get_product_by_id(product_id):
     return None
 
 
+@products_page.route("/<product_id>/", methods=["PUT"])
+def update_product(product_id):
+    if request.headers.get('Content-Type') != 'application/json':
+        return jsonify({"error": "json content-type required"}), 400
+
+    product_dict = dict()
+    try:
+        for key, data_type in INPUT_MAP:
+            add_input(key, data_type, request.json, product_dict, optional=True)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+    db = get_database()
+
+    update_response = db[PRODUCTS_COL].update_one(
+        {"product_id": product_id},
+        {"$set": product_dict}
+    )
+    if update_response.modified_count == 1:
+        updated_product = get_product_by_id(product_id)
+        search_handler.delete_product(product_id)
+        search_handler.add_product(product_id, updated_product)
+        return jsonify({"success": product_id, "product": updated_product}), 200
+
+    return jsonify({"error": update_response}), 500
+
+
 @products_page.route("/<product_id>/", methods=["DELETE"])
 def delete_product(product_id):
     db = get_database()
@@ -213,7 +240,7 @@ def add_product(input_json):
         for key, data_type in INPUT_MAP:
             add_input(key, data_type, input_json, product_dict)
     except Exception as e:
-        return str(e)
+        return jsonify({"error": str(e)}), 400
 
     db = get_database()
 
@@ -226,8 +253,10 @@ def add_product(input_json):
     return jsonify({"success": product_id}), 200
 
 
-def add_input(key, data_type, input_dict, output_dict):
+def add_input(key, data_type, input_dict, output_dict, optional=False):
     if key not in input_dict or len(str(input_dict[key]).strip()) == 0:
+        if optional:
+            return
         raise Exception("Missing " + key)
 
     if data_type == str:
