@@ -53,11 +53,20 @@
             background:url("/static/images/cart-line-icon.svg");
         }
 
+        .header-card {
+            position: absolute; // absolute is absolute to a relative element
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8px;
+            background: #777;
+            color: white;
+        }
     </style>
 </head>
 <body>
 
-<h1>Welcome {{ computerName }}</h1>
+<h1>Inventory Management System</h1>
 <button type="button" class="collapsible" id="products">Products</button>
 <div class="content" style="overflow-x:auto; display:block">
     <p>
@@ -95,6 +104,10 @@
 <!--    <p><a href="/static/newproduct.html">Add a product</a></p>-->
     <p><a href="/static/deleteproduct.html">Delete a product</a></p>
     <p><a href="/health">Product Health Check</a></p>
+</div>
+<p></p>
+<div class="header-card">
+    Running from {{ computerName }}
 </div>
 
 
