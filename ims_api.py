@@ -30,6 +30,7 @@ PROJECT_DICT = {
     "category": 1,
     "price": 1,
     "description": 1,
+    "quantity": 1,
     "sold": 1,
     "quantity_remaining": {
         "$subtract": ["$quantity", "$sold"]

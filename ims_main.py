@@ -34,12 +34,14 @@ def health_check():
 
     sample_products = Path("static/sample_products.json").read_text()
 
+    products_json = ims_api.all_products({})
     health_dict = {
         "computerName": socket.gethostname() + " (" + socket.gethostbyname("localhost") + ")",
         "goodProducts": [{"product_id": x} for x in in_both],
         "missingMongo": [{"product_id": x} for x in only_in_search],
         "missingES": [{"product_id": x} for x in only_in_mongo],
-        "sampleProducts": sample_products
+        "sampleProducts": sample_products,
+        "products": products_json
     }
 
     return template.render(health_dict)

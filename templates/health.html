@@ -7,38 +7,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-  <h1>Product Management</h1>
+<h1>Product Management</h1>
 
 <button type="button" class="collapsible" id="health">Health Check</button>
 <div class="content" style="overflow-x:auto; display:block">
-{% if (goodProducts|length != 0) or (missingMongo|length != 0) or (missingES|length != 0) %}
-<p>Healthy products: {{ goodProducts|length }}</p>
+    {% if (goodProducts|length != 0) or (missingMongo|length != 0) or (missingES|length != 0) %}
+    <p>Healthy products: {{ goodProducts|length }}</p>
 
-<p>Missing in Mongo: {{ missingMongo|length }}</p>
-{% if (missingMongo|length != 0)%}
-<button id="deleteES" onclick="deleteES()">Delete from ElasticSearch</button>
-{% endif %}
+    <p>Missing in Mongo: {{ missingMongo|length }}</p>
+    {% if (missingMongo|length != 0)%}
+    <button id="deleteES" onclick="deleteES()">Delete from ElasticSearch</button>
+    {% endif %}
 
-<p>Missing in ElasticSearch: {{ missingES|length }}</p>
-{% if (missingES|length != 0)%}
-<button id="backupFromMongo" onclick="backupFromMongo()">Upload to ElasticSearch (TODO)</button>
-{% endif %}
-{% endif %}
+    <p>Missing in ElasticSearch: {{ missingES|length }}</p>
+    {% if (missingES|length != 0)%}
+    <button id="backupFromMongo" onclick="backupFromMongo()">Upload to ElasticSearch (TODO)</button>
+    {% endif %}
+    {% endif %}
 </div>
 
 <button type="button" class="collapsible" id="products">Products</button>
 <div class="content" style="overflow-x:auto; display:block">
-{% if (goodProducts|length != 0) or (missingMongo|length != 0) or (missingES|length != 0) %}
-<p>
-    <button id="deleteAllButton" type="button" onclick="getAll(deleteAll)">Delete all Products</button>
-</p>
-{% else %}
-<p>No products.</p>
-<p>
-    <button id="sampleData" onclick="sendSampleData()">Create Sample Data</button>
-</p>
-{% endif %}
+    {% if (goodProducts|length != 0) or (missingMongo|length != 0) or (missingES|length != 0) %}
+    <p>
+        <button id="deleteAllButton" type="button" onclick="getAll(deleteAll)">Delete all Products</button>
+    </p>
+    {% else %}
+    <p>No products.</p>
+    <p>
+        <button id="sampleData" onclick="sendSampleData()">Create Sample Data</button>
+    </p>
+    {% endif %}
+    <p>
+        {% if products is defined and products|length > 0 %}
+    <table id="product-table">
+        <tr>
+            <th style="font-size: 24px">Product</th>
+            <th style="font-size: 24px">Price</th>
+            <th style="font-size: 24px">Quantity Remaining</th>
+            <th colspan="2" style="font-size: 24px;text-align: center">Actions</th>
+        </tr>
+        {% for product in products -%}
 
+
+        <tr id="product-row-{{ product.product_id }}">
+            <td><input id="product-name-{{ product.product_id }}" type="text" value="{{ product.name }}"></td>
+            <td><input id="product-price-{{ product.product_id }}" type="number" value="{{ product.price }}"></td>
+            <td><input id="product-quantity-remaining-{{ product.product_id }}" data-sold="{{ product.sold }}"
+                       type="number" value="{{ product.quantity_remaining }}"></td>
+            <td style="text-align: center">
+                <button onclick="updateProduct('{{ product.product_id }}')" id="update">Update</button>
+            </td>
+            <td style="text-align: center">
+                <button onclick="deleteProduct('{{ product.product_id }}')" id="delete">Delete</button>
+            </td>
+        </tr>
+
+        {% endfor %}
+    </table>
+    {% else %}
+    No products found.
+    {% endif %}
+    </p>
+</div>
 
 <script>
 createCollapsible(document.getElementById("health"));
@@ -127,6 +158,52 @@ createCollapsible(document.getElementById("products"));
         }
       });
     }
+
+    function updateProduct(productId) {
+        let newName = document.getElementById("product-name-" + productId)
+        let newPrice = document.getElementById("product-price-" + productId)
+        let newQuantity = document.getElementById("product-quantity-remaining-" + productId)
+
+        $.ajax({
+            type: "PUT",
+            url: "/products/" + productId + "/",
+            data: JSON.stringify({
+                "name": newName.value,
+                "price": newPrice.value,
+                "quantity": parseInt(newQuantity.value) + parseInt(newQuantity.dataset.sold)
+            }),
+            contentType: "application/json",
+
+            success: function(response) {
+                alert("Successfully updated!");
+            },
+            error: function(error) {
+                // Handle any errors that occurred during the AJAX request
+                console.error(error);
+                alert("An error occurred while submitting the data.");
+            }
+        });
+    }
+    function deleteProduct(productId) {
+        let row = document.getElementById("product-row-" + productId)
+
+        $.ajax({
+            type: "DELETE",
+            url: "/products/" + productId + "/",
+            contentType: "application/json",
+
+            success: function(response) {
+                $(row).remove()
+                alert("Successfully deleted!");
+            },
+            error: function(error) {
+                // Handle any errors that occurred during the AJAX request
+                console.error(error);
+                alert("An error occurred while submitting the data.");
+            }
+        });
+    }
+
 
 
 </script>

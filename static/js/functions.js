@@ -21,7 +21,7 @@ function buy(product_id) {
             let qty = document.getElementById("quantity-" + product_id)
             let remainingQty = parseInt(response["product"]["quantity_remaining"])
             if(remainingQty <= 0) {
-                let qtyRow = document.getElementById("quantity-row-" + product_id)
+                let qtyRow = document.getElementById("product-row-" + product_id)
                 $(qtyRow).remove()
             }
 
