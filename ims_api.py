@@ -242,17 +242,22 @@ def add_input(key, data_type, input_dict, output_dict):
 def get_analytics():
     db = get_database()
 
-    agg = db[PRODUCTS_COL].aggregate([{
-        "$project": {
-            "product_id": 1,
-            "qty_left": {
-                "$subtract": ["$quantity", "$sold"]
-            }
+    new_dict = dict(PROJECT_DICT)
+    new_dict.update({
+        "revenue": {
+            "$multiply": ["$sold", "$price"]
         }
+    })
+    category_totals = db[PRODUCTS_COL].aggregate([{
+        "$project": new_dict
+    }, {
+        "$group": {
+            "_id": "$category",
+            "sold": {"$sum": "$sold"},
+            "revenue": {"$sum": "$revenue"}
+        }
+    }, {
+        "$sort": {"sold": -1}
     }])
 
-    print(agg)
-    for a in agg:
-        print("  " + str(a))
-
-    return mongo_product_to_dict(db["inventory"].find())
+    return jsonify({"category_totals": list(category_totals)})

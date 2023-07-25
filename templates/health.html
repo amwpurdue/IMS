@@ -1,22 +1,26 @@
 <html>
 <head>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title>Product Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+  <h1>Product Management</h1>
 
 {% if (goodProducts|length != 0) or (missingMongo|length != 0) or (missingES|length != 0) %}
 <p>Healthy products: {{ goodProducts|length }}</p>
 
 <p>Missing in Mongo: {{ missingMongo|length }}</p>
 {% if (missingMongo|length != 0)%}
-    <button id="deleteES" onclick="deleteES()">Delete from ElasticSearch</button>
+<button id="deleteES" onclick="deleteES()">Delete from ElasticSearch</button>
 {% endif %}
 
 <p>Missing in ElasticSearch: {{ missingES|length }}</p>
 {% if (missingES|length != 0)%}
-    <button id="backupFromMongo" onclick="backupFromMongo()">Upload to ElasticSearch (TODO)</button>
+<button id="backupFromMongo" onclick="backupFromMongo()">Upload to ElasticSearch (TODO)</button>
 {% endif %}
-
+<p>
+    <button id="deleteAllButton" type="button" onclick="getAll(deleteAll)">Delete all Products</button>
+</p>
 {% else %}
 <p>No products.</p>
 <p>
@@ -68,6 +72,48 @@
     function backupFromMongo() {
         console.log("TODO")
     }
+
+    function getAll(successFunction) {
+      $.ajax({
+        type: "GET",
+        url: "/products/",
+        data: {"all":"1"},
+        success: function(response) {
+          successFunction(response)
+        },
+        error: function(error) {
+          console.error(error);
+          alert("An error occurred while submitting the data.");
+        }
+      });
+    }
+
+    function deleteAll(getAllResponse) {
+      document.getElementById("deleteAllButton").disabled = true
+      if (!getAllResponse.products || !Array.isArray(getAllResponse.products)) {
+        throw new Error("Missing data from getAll response");
+      }
+
+      const productIds = getAllResponse.products;
+
+      $.ajax({
+        type: "DELETE",
+        url: "/products/",
+        data: JSON.stringify({"products": productIds}),
+        contentType: "application/json",
+        success: function(response) {
+          // Handle the response from the server
+          alert("Data successfully deleted!");
+        },
+        error: function(error) {
+          // Handle any errors that occurred during the AJAX request
+          console.error(error);
+          alert("An error occurred while submitting the data.");
+          document.getElementById("deleteAllButton").disabled = false
+        }
+      });
+    }
+
 
 </script>
 
