@@ -1,5 +1,13 @@
-# IMS
-For job interview application
+# IMS - Inventory Management System
+Initially for a job interview homework assignment,
+I've been using this as an opportunity to learn a Kubernetes and writing containerized
+web applications. This application uses Flask and MongoDB, connecting to ElasticSearch 
+for searching.
+
+## Prerequisites
+This requires a working Kubernetes with kubectl access, Docker, and helm installed.
+I used Docker Desktop on Windows, and win-get to install the other applications.
+
 ## MongoDB Setup
 Run the following to install MongoDB via helm on an existing kubernetes:
 ```
@@ -16,6 +24,7 @@ After this, we need to install the secrets into kubernetes:
 ```
 kubectl apply -f ims-secrets.yml
 ```
+
 ## Flask Setup
 Build the image to be deployed: 
 ```
@@ -25,6 +34,7 @@ Deploy to kubernetes:
 ```
 kubectl apply -f ims-deployment.yml
 ```
+
 ## Using the Website
 Navigate to 127.0.0.1:5000, and you will see a basic webpage
 with some of the backend features being used. At first, there
