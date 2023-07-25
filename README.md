@@ -25,3 +25,9 @@ Deploy to kubernetes:
 ```
 kubectl apply -f ims-deployment.yml
 ```
+## Using the Website
+Navigate to 127.0.0.1:5000, and you will see a basic webpage
+with some of the backend features being used. At first, there
+will be no products. Under the "Admin" - "Product Management" page, there
+is an option to import sample data. After this is created, you should
+be able to refresh and play around with the normal website.
