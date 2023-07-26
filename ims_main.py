@@ -5,6 +5,7 @@ from pathlib import Path
 
 from flask import Flask, request
 from jinja2 import Environment, FileSystemLoader
+from waitress import serve
 
 import ims_api
 from ims_api import products_page
@@ -66,6 +67,6 @@ def health_check():
 
 if __name__ == "__main__":
     if "IMS_SERVICE_SERVICE_PORT" in os.environ:
-        app.run(host="0.0.0.0", port=int(os.environ["IMS_SERVICE_SERVICE_PORT"]))
+        serve(app, host="0.0.0.0", port=int(os.environ["IMS_SERVICE_SERVICE_PORT"]))
     else:
-        app.run(host="0.0.0.0", port=5000)
+        serve(app, host="0.0.0.0", port=5000)
