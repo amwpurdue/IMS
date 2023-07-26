@@ -204,6 +204,13 @@ def search_products():
 
 
 def get_products_with_keywords(keywords):
+    db = get_database()
+    db["searches"].update_one(
+        {"keywords": keywords},
+        {"$set": {"keywords": keywords}, "$inc": {"times": 1}},
+        upsert=True
+    )
+
     product_list = []
     for res in search_handler.search_product(keywords):
         p = get_product_by_id(res)

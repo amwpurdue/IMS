@@ -1,4 +1,5 @@
 import os
+import datetime
 import socket
 from pathlib import Path
 
@@ -29,6 +30,14 @@ def index():
         products_json = ims_api.all_products()
 
     template_dict.update({"products": products_json})
+
+    ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+    db = ims_api.get_database()
+    db["visitors"].update_one(
+        {"ip": ip},
+        {"$set": {"ip": ip, "last_modified": datetime.datetime.now(tz=datetime.timezone.utc)}},
+        upsert=True
+    )
 
     return template.render(template_dict)
 
