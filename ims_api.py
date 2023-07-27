@@ -48,11 +48,15 @@ def get_database():
 
 
 if "elastic_cloud_id" in os.environ and "elastic_user_password" in os.environ:
-    search_handler = SearchHandlerElastic(
-        os.environ.get("es_index", "search-ims-test"),
-        os.environ["elastic_cloud_id"],
-        os.environ["elastic_user_password"]
-    )
+    try:
+        search_handler = SearchHandlerElastic(
+            os.environ.get("es_index", "search-ims-test"),
+            os.environ["elastic_cloud_id"],
+            os.environ["elastic_user_password"]
+        )
+    except Exception as e:
+        print("Error in connecting to ElasticSearch: " + str(e))
+        search_handler = SearchHandlerMongo(get_database())
 else:
     search_handler = SearchHandlerMongo(get_database())
 
