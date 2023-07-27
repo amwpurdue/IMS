@@ -25,6 +25,19 @@ After this, we need to install the secrets into kubernetes:
 kubectl apply -f ims-secrets.yml
 ```
 
+## ElasticSearch Setup (Optional)
+I have a trial of the ElasticSearch Cloud API that I've been using.
+If you want to plug in your own API. Modify the ims-secrets file with your info:
+```
+  elastic_cloud_id: base64cloudid
+  elastic_user_password: base64password
+```
+This will need to applied via: 
+```
+kubectl apply -f ims-secrets.yml
+```
+You will need to have an index called "search-ims-prod" already set up in ElasticSearch.
+
 ## Flask Setup
 Build the image to be deployed: 
 ```
