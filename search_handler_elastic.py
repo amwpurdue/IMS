@@ -1,14 +1,16 @@
 from elasticsearch import Elasticsearch, exceptions
 
+from search_handler import SearchHandler
+
 INPUT_KEYS = ["name", "description"]
 
 
-class SearchHandler:
+class SearchHandlerElastic(SearchHandler):
     def __init__(self, index_name, cloud_id, elastic_password) -> None:
         self.INDEX_NAME = index_name
         self.es = Elasticsearch(
-            cloud_id="ims:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDUwZTU2ZTdiMTRhZjQxMzQ4MDZhNTkxZGY1MzBkNTI4JGE3OTczNDM4ZjI5MzQ4NGRhMDA2YTAxMTM2Y2ZiYmJm",
-            basic_auth=("elastic", "pRKY6somzlp2xyO3FGPq4yga")
+            cloud_id=cloud_id,
+            basic_auth=("elastic", elastic_password)
         )
 
     def add_product(self, product_id, product_dict) -> bool:
@@ -19,12 +21,6 @@ class SearchHandler:
 
     def delete_product(self, product_id) -> bool:
         return self.es.delete(index=self.INDEX_NAME, id=product_id)
-
-    def get_product(self, product_id):
-        try:
-            return self.es.get(index=self.INDEX_NAME, id=product_id)
-        except exceptions.NotFoundError:
-            return None
 
     def get_all(self):
         return self.search({
@@ -43,3 +39,6 @@ class SearchHandler:
         self.es.indices.refresh(index=self.INDEX_NAME)
         search_results = self.es.search(index=self.INDEX_NAME, query=search_query, size=100)
         return [res.get("_id") for res in search_results["hits"]["hits"]]
+
+    def to_string(self):
+        return "ElasticSearch Cloud API"

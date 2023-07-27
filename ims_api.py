@@ -3,18 +3,12 @@ import os
 import uuid
 
 from flask import Blueprint, request, jsonify
-from pymongo import MongoClient, ReturnDocument
+from pymongo import MongoClient
 
-from search_handler import SearchHandler
-
-PRODUCTS_COL = "products"
+from search_handler_elastic import SearchHandlerElastic
+from search_handler_mongo import SearchHandlerMongo, PRODUCTS_COL
 
 products_page = Blueprint("products_page", __name__, url_prefix="/products")
-
-if "es_index" in os.environ:
-    search_handler = SearchHandler(os.environ["es_index"])
-else:
-    search_handler = SearchHandler("search-ims-test")
 
 INPUT_MAP = [
     ("name", str),
@@ -37,20 +31,30 @@ PROJECT_DICT = {
     }
 }
 
+if "db_root_password" in os.environ:
+    client = MongoClient(
+        host=os.environ["MY_RELEASE_MONGODB_SERVICE_HOST"] + ":" + os.environ["MY_RELEASE_MONGODB_SERVICE_PORT"],
+        username="root",
+        password=os.environ["db_root_password"]
+    )
+else:
+    client = MongoClient(
+        host=os.environ["MY_RELEASE_MONGODB_SERVICE_HOST"] + ":" + os.environ["MY_RELEASE_MONGODB_SERVICE_PORT"]
+    )
+
 
 def get_database():
-    if "db_root_password" in os.environ:
-        client = MongoClient(
-            host=os.environ["MY_RELEASE_MONGODB_SERVICE_HOST"] + ":" + os.environ["MY_RELEASE_MONGODB_SERVICE_PORT"],
-            username="root",
-            password=os.environ["db_root_password"]
-        )
-    else:
-        client = MongoClient(
-            host=os.environ["MY_RELEASE_MONGODB_SERVICE_HOST"] + ":" + os.environ["MY_RELEASE_MONGODB_SERVICE_PORT"]
-        )
-
     return client[os.environ["db_name"]]
+
+
+if "elastic_cloud_id" in os.environ and "elastic_user_password" in os.environ:
+    search_handler = SearchHandlerElastic(
+        os.environ.get("es_index", "search-ims-test"),
+        os.environ["elastic_cloud_id"],
+        os.environ["elastic_user_password"]
+    )
+else:
+    search_handler = SearchHandlerMongo(get_database())
 
 
 def mongo_product_to_dict(db_result):

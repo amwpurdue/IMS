@@ -20,7 +20,8 @@ def index():
     template = environment.get_template("front.html")
 
     template_dict = {
-        "computerName": socket.gethostname() + " (" + socket.gethostbyname("localhost") + ")"
+        "computerName": socket.gethostname() + " (" + socket.gethostbyname("localhost") + ")",
+        "searchHandler": ims_api.search_handler.to_string()
     }
 
     if "keywords" in request.args:

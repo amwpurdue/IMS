@@ -26,6 +26,16 @@ spec:
               secretKeyRef:
                 name: ims-secrets
                 key: db_root_password
+          - name: elastic_cloud_id
+            valueFrom:
+              secretKeyRef:
+                name: ims-secrets
+                key: elastic_cloud_id
+          - name: elastic_user_password
+            valueFrom:
+              secretKeyRef:
+                name: ims-secrets
+                key: elastic_user_password
           - name: db_name
             value: ims
           - name: es_index
